@@ -308,6 +308,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ by the Mango Tree Team**
 
 *Decentralized betting for the future of gaming* 🎲🌳

@@ -7,9 +7,12 @@ async function main() {
 
   // Get the contract factories
   const MockToken = await ethers.getContractFactory("MockToken");
-  const BetContract = await ethers.getContractFactory("BetContract");
   const BetEscrow = await ethers.getContractFactory("BetEscrow");
+  const BetContract = await ethers.getContractFactory("BetContract");
   const IntentRouter = await ethers.getContractFactory("IntentRouter");
+  const VRFConsumer = await ethers.getContractFactory("VRFConsumer");
+  const GameLogic = await ethers.getContractFactory("GameLogic");
+  const TestContract = await ethers.getContractFactory("TestContract");
 
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with account:", deployer.address);
@@ -32,9 +35,21 @@ async function main() {
   await betEscrow.deployed();
   console.log("✅ BetEscrow deployed to:", betEscrow.address);
 
+  // Deploy VRFConsumer
+  console.log("\n🎲 Deploying VRFConsumer...");
+  const vrfConsumer = await VRFConsumer.deploy();
+  await vrfConsumer.deployed();
+  console.log("✅ VRFConsumer deployed to:", vrfConsumer.address);
+
+  // Deploy GameLogic
+  console.log("\n🎮 Deploying GameLogic...");
+  const gameLogic = await GameLogic.deploy(vrfConsumer.address);
+  await gameLogic.deployed();
+  console.log("✅ GameLogic deployed to:", gameLogic.address);
+
   // Deploy BetContract
   console.log("\n🎲 Deploying BetContract...");
-  const betContract = await BetContract.deploy();
+  const betContract = await BetContract.deploy(betEscrow.address);
   await betContract.deployed();
   console.log("✅ BetContract deployed to:", betContract.address);
 
@@ -43,6 +58,12 @@ async function main() {
   const intentRouter = await IntentRouter.deploy();
   await intentRouter.deployed();
   console.log("✅ IntentRouter deployed to:", intentRouter.address);
+
+  // Deploy TestContract (optional, for testing)
+  console.log("\n🧪 Deploying TestContract...");
+  const testContract = await TestContract.deploy();
+  await testContract.deployed();
+  console.log("✅ TestContract deployed to:", testContract.address);
 
   // Configure contracts
   console.log("\n⚙️ Configuring contracts...");
@@ -93,6 +114,15 @@ async function main() {
       },
       IntentRouter: {
         address: intentRouter.address
+      },
+      VRFConsumer: {
+        address: vrfConsumer.address
+      },
+      GameLogic: {
+        address: gameLogic.address
+      },
+      TestContract: {
+        address: testContract.address
       }
     },
     configuration: {
@@ -124,6 +154,9 @@ async function main() {
   console.log(`BetEscrow: ${betEscrow.address}`);
   console.log(`BetContract: ${betContract.address}`);
   console.log(`IntentRouter: ${intentRouter.address}`);
+  console.log(`VRFConsumer: ${vrfConsumer.address}`);
+  console.log(`GameLogic: ${gameLogic.address}`);
+  console.log(`TestContract: ${testContract.address}`);
   console.log("\n✨ All contracts deployed successfully!");
 
   // Verify contracts (if on a supported network)

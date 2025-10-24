@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./BetEscrow.sol";
 
 /**
  * @title BetContract
@@ -68,6 +69,7 @@ contract BetContract is Ownable, ReentrancyGuard {
     mapping(address => bool) public supportedTokens;
     mapping(address => bool) public authorizedResolvers;
     
+    BetEscrow public betEscrow;
     uint256 public nextBetId = 1;
     uint256 public platformFee = 250; // 2.5% (250/10000)
     uint256 public constant MAX_FEE = 1000; // 10% max fee
@@ -84,9 +86,10 @@ contract BetContract is Ownable, ReentrancyGuard {
         _;
     }
 
-    constructor() {
+    constructor(address _betEscrow) {
         // Initialize with owner as authorized resolver
         authorizedResolvers[msg.sender] = true;
+        betEscrow = BetEscrow(_betEscrow);
     }
 
     /**
@@ -112,11 +115,13 @@ contract BetContract is Ownable, ReentrancyGuard {
 
         uint256 betId = nextBetId++;
         
-        // Handle payment
+        // Handle payment through escrow
         if (token == address(0)) {
             require(msg.value >= amount, "Insufficient ETH sent");
+            betEscrow.depositFunds{value: amount}(betId, msg.sender, amount, token);
         } else {
-            IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+            IERC20(token).safeTransferFrom(msg.sender, address(betEscrow), amount);
+            betEscrow.depositFunds(betId, msg.sender, amount, token);
         }
 
         // Create bet
@@ -155,11 +160,13 @@ contract BetContract is Ownable, ReentrancyGuard {
             require(bet.participants[i] != msg.sender, "Already participated");
         }
 
-        // Handle payment
+        // Handle payment through escrow
         if (bet.token == address(0)) {
             require(msg.value >= bet.amount, "Insufficient ETH sent");
+            betEscrow.depositFunds{value: bet.amount}(betId, msg.sender, bet.amount, bet.token);
         } else {
-            IERC20(bet.token).safeTransferFrom(msg.sender, address(this), bet.amount);
+            IERC20(bet.token).safeTransferFrom(msg.sender, address(betEscrow), bet.amount);
+            betEscrow.depositFunds(betId, msg.sender, bet.amount, bet.token);
         }
 
         bet.participants.push(msg.sender);
@@ -177,7 +184,7 @@ contract BetContract is Ownable, ReentrancyGuard {
     function resolveBet(
         uint256 betId,
         address winner,
-        string calldata gameResult
+        string calldata /* gameResult */
     ) external onlyAuthorizedResolver validBet(betId) {
         Bet storage bet = bets[betId];
         
@@ -195,18 +202,13 @@ contract BetContract is Ownable, ReentrancyGuard {
         bet.winner = winner;
         bet.resolvedAt = block.timestamp;
 
-        // Calculate winnings (total pot minus platform fee)
+        // Release funds from escrow to winner
+        betEscrow.releaseFunds(betId, winner, bet.participants);
+
+        // Calculate total pot for event emission
         uint256 totalPot = bet.amount * bet.participants.length;
         uint256 feeAmount = (totalPot * platformFee) / 10000;
         uint256 winnings = totalPot - feeAmount;
-
-        // Transfer winnings to winner
-        if (bet.token == address(0)) {
-            (bool success, ) = payable(winner).call{value: winnings}("");
-            require(success, "ETH transfer failed");
-        } else {
-            IERC20(bet.token).safeTransfer(winner, winnings);
-        }
 
         emit BetResolved(betId, winner, winnings, block.timestamp);
     }
@@ -222,13 +224,10 @@ contract BetContract is Ownable, ReentrancyGuard {
 
         bet.status = BetStatus.Cancelled;
 
-        // Refund creator
-        if (bet.token == address(0)) {
-            (bool success, ) = payable(bet.creator).call{value: bet.amount}("");
-            require(success, "ETH refund failed");
-        } else {
-            IERC20(bet.token).safeTransfer(bet.creator, bet.amount);
-        }
+        // Refund creator through escrow
+        address[] memory participants = new address[](1);
+        participants[0] = bet.creator;
+        betEscrow.refundFunds(betId, participants);
 
         emit BetCancelled(betId, bet.creator, block.timestamp);
     }
@@ -280,6 +279,10 @@ contract BetContract is Ownable, ReentrancyGuard {
     function setPlatformFee(uint256 newFee) external onlyOwner {
         require(newFee <= MAX_FEE, "Fee too high");
         platformFee = newFee;
+    }
+
+    function setBetEscrow(address _betEscrow) external onlyOwner {
+        betEscrow = BetEscrow(_betEscrow);
     }
 
     function withdrawFees(address token) external onlyOwner {
