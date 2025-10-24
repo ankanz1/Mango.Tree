@@ -20,7 +20,7 @@ contract GameLogic is Ownable {
     event GameResult(uint256 indexed betId, uint256 result, string gameType);
     
     constructor(address _vrfConsumer) {
-        vrfConsumer = VRFConsumer(_vrfConsumer);
+        vrfConsumer = VRFConsumer(payable(_vrfConsumer));
     }
     
     /**
@@ -36,7 +36,7 @@ contract GameLogic is Ownable {
         bytes32 requestId = vrfConsumer.requestRandomness(betId);
         
         // For now, use block data as fallback (not ideal for production)
-        uint256 randomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, betId)));
+        uint256 randomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, betId)));
         uint256 coinResult = randomNumber % 2; // 0 = heads, 1 = tails
         
         gameResults[betId] = coinResult;
@@ -62,7 +62,7 @@ contract GameLogic is Ownable {
         bytes32 requestId = vrfConsumer.requestRandomness(betId);
         
         // For now, use block data as fallback
-        uint256 randomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, betId)));
+        uint256 randomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, betId)));
         uint256 diceResult = (randomNumber % 6) + 1; // 1-6
         
         gameResults[betId] = diceResult;
@@ -88,7 +88,7 @@ contract GameLogic is Ownable {
         bytes32 requestId = vrfConsumer.requestRandomness(betId);
         
         // For now, use block data as fallback
-        uint256 randomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, betId)));
+        uint256 randomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, betId)));
         uint256 spinResult = randomNumber % 3; // 0-2
         
         gameResults[betId] = spinResult;
@@ -124,6 +124,6 @@ contract GameLogic is Ownable {
      * @param _vrfConsumer New VRF consumer address
      */
     function setVRFConsumer(address _vrfConsumer) external onlyOwner {
-        vrfConsumer = VRFConsumer(_vrfConsumer);
+        vrfConsumer = VRFConsumer(payable(_vrfConsumer));
     }
 }

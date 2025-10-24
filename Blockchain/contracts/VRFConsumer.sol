@@ -35,14 +35,14 @@ contract VRFConsumer is Ownable {
     function requestRandomness(uint256 betId) external onlyOwner returns (bytes32) {
         require(address(this).balance >= fee, "Not enough ETH for fee");
         
-        bytes32 requestId = keccak256(abi.encodePacked(block.timestamp, block.difficulty, betId, msg.sender));
+        bytes32 requestId = keccak256(abi.encodePacked(block.timestamp, block.prevrandao, betId, msg.sender));
         requestToSender[requestId] = msg.sender;
         requestToBetId[requestId] = betId;
         
         emit RandomnessRequested(requestId, msg.sender, betId);
         
         // Mock fulfillment (in real implementation, this would be called by VRF coordinator)
-        uint256 randomness = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, betId)));
+        uint256 randomness = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, betId)));
         fulfillRandomness(requestId, randomness);
         
         return requestId;

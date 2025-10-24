@@ -1,13 +1,10 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("hardhat-gas-reporter");
-require("solidity-coverage");
-require("hardhat-contract-sizer");
 require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    version: "0.8.19",
+    version: "0.8.20",
     settings: {
       optimizer: {
         enabled: true,
@@ -19,48 +16,62 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
-    celo: {
-      url: "https://forno.celo.org",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 42220,
-    },
     celoAlfajores: {
-      url: "https://alfajores-forno.celo-testnet.org",
+      url: process.env.CELO_RPC_URL || "https://alfajores-forno.celo-testnet.org",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 44787,
+      gasPrice: 20000000000, // 20 gwei
     },
-    polygon: {
-      url: "https://polygon-rpc.com",
+    celoSepolia: {
+      url: process.env.CELO_RPC_URL || "https://forno.celo-sepolia.celo-testnet.org",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 137,
+      chainId: 11142220, // Celo Sepolia Chain ID
+      gasPrice: 100000000000, // 100 gwei - higher gas price for Celo Sepolia
     },
-    polygonMumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
+    celo: {
+      url: process.env.CELO_RPC_URL || "https://forno.celo.org",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 80001,
-    },
-    ethereum: {
-      url: "https://mainnet.infura.io/v3/" + process.env.INFURA_KEY,
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 1,
-    },
-    ethereumGoerli: {
-      url: "https://goerli.infura.io/v3/" + process.env.INFURA_KEY,
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 5,
+      chainId: 42220,
+      gasPrice: 20000000000, // 20 gwei
     },
   },
   etherscan: {
     apiKey: {
+      celoAlfajores: process.env.CELOSCAN_API_KEY,
+      celoSepolia: process.env.CELOSCAN_API_KEY,
       celo: process.env.CELOSCAN_API_KEY,
-      polygon: process.env.POLYGONSCAN_API_KEY,
-      mainnet: process.env.ETHERSCAN_API_KEY,
     },
+    customChains: [
+      {
+        network: "celoAlfajores",
+        chainId: 44787,
+        urls: {
+          apiURL: "https://api-alfajores.celoscan.io/api",
+          browserURL: "https://alfajores.celoscan.io",
+        },
+      },
+      {
+        network: "celoSepolia",
+        chainId: 11142220,
+        urls: {
+          apiURL: "https://api-sepolia.celoscan.io/api",
+          browserURL: "https://sepolia.celoscan.io",
+        },
+      },
+      {
+        network: "celo",
+        chainId: 42220,
+        urls: {
+          apiURL: "https://api.celoscan.io/api",
+          browserURL: "https://celoscan.io",
+        },
+      },
+    ],
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
-    gasPrice: 21,
+    gasPrice: 20,
     showTimeSpent: true,
     showMethodSig: true,
   },
@@ -77,4 +88,3 @@ module.exports = {
     artifacts: "./artifacts",
   },
 };
-

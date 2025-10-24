@@ -177,7 +177,7 @@ export default function LiveBetsFeed({ limit = 20, showPayouts = true }: LiveBet
 
   return (
     <div className="space-y-4">
-      <motion.div 
+        <motion.div
         initial={{ opacity: 0, y: -20 }} 
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center justify-between"
@@ -190,7 +190,7 @@ export default function LiveBetsFeed({ limit = 20, showPayouts = true }: LiveBet
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
           Live
         </div>
-      </motion.div>
+        </motion.div>
 
       <div className="space-y-3 max-h-96 overflow-y-auto">
         <AnimatePresence>
@@ -199,7 +199,7 @@ export default function LiveBetsFeed({ limit = 20, showPayouts = true }: LiveBet
             const eventColor = getEventColor(event.eventType)
             
             return (
-              <motion.div
+            <motion.div
                 key={event.id}
                 initial={{ opacity: 0, x: -20, scale: 0.95 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -250,7 +250,7 @@ export default function LiveBetsFeed({ limit = 20, showPayouts = true }: LiveBet
                     )}
                   </div>
                 </div>
-              </motion.div>
+                </motion.div>
             )
           })}
         </AnimatePresence>
@@ -260,7 +260,7 @@ export default function LiveBetsFeed({ limit = 20, showPayouts = true }: LiveBet
             <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>No recent activity</p>
             <p className="text-sm">Activity will appear here as users place bets</p>
-          </div>
+              </div>
         )}
       </div>
     </div>

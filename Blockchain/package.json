@@ -10,11 +10,13 @@
     "deploy": "hardhat run scripts/deploy.js --network",
     "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
     "deploy:alfajores": "hardhat run scripts/deploy.js --network celoAlfajores",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network celoSepolia",
     "deploy:celo": "hardhat run scripts/deploy.js --network celo",
     "deploy:mumbai": "hardhat run scripts/deploy.js --network polygonMumbai",
     "deploy:polygon": "hardhat run scripts/deploy.js --network polygon",
     "verify": "hardhat run scripts/verify.js --network",
     "verify:alfajores": "hardhat run scripts/verify.js --network celoAlfajores",
+    "verify:sepolia": "hardhat run scripts/verify.js --network celoSepolia",
     "verify:celo": "hardhat run scripts/verify.js --network celo",
     "verify:mumbai": "hardhat run scripts/verify.js --network polygonMumbai",
     "verify:polygon": "hardhat run scripts/verify.js --network polygon",
@@ -24,7 +26,12 @@
     "gas": "REPORT_GAS=true hardhat test",
     "start:solver": "node services/SolverService.js",
     "start:listener": "node services/EventListener.js",
-    "start:all": "node scripts/start-all.js"
+    "start:all": "node scripts/start-all.js",
+    "mango:deploy": "hardhat run scripts/deploy.js --network celoSepolia",
+    "mango:deploy-all": "hardhat run scripts/deploy-all.js --network celoSepolia",
+    "mango:verify": "hardhat run scripts/verify.js --network celoSepolia",
+    "mango:test": "hardhat test test/MangoTree.test.js",
+    "mango:compile": "hardhat compile --force"
   },
   "keywords": [
     "blockchain",

@@ -179,7 +179,6 @@ contract BetContract is Ownable, ReentrancyGuard {
      * @dev Resolve a bet and determine winner
      * @param betId The bet ID to resolve
      * @param winner The winner's address
-     * @param gameResult Additional game result data
      */
     function resolveBet(
         uint256 betId,

@@ -61,6 +61,23 @@ Mango.Tree/
 └── scripts/                 # Deployment Scripts
 ```
 
+## 🎯 Current Status
+
+### ✅ **LIVE DEPLOYMENT**
+- **Network**: Celo Sepolia Testnet (Chain ID: 11142220)
+- **Status**: All 7 contracts deployed and functional
+- **Total Gas Used**: 8,262,422
+- **Deployment Cost**: 0.8262422 CELO
+- **Deployer**: `0xC0Aa6fb8641c2b014d86112dB098AAb17bcc9b13`
+
+### 📋 **Deployment Checklist**
+- ✅ Smart Contracts Deployed
+- ✅ Contract Addresses Generated
+- ✅ CeloScan Links Available
+- 🔄 Backend Integration (In Progress)
+- 🔄 Frontend Integration (In Progress)
+- 🔄 Cross-Chain Bridge Setup (Planned)
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -97,17 +114,27 @@ cp Frontend/.env.example Frontend/.env.local
 # Update with your configuration
 ```
 
-### 4. Deploy Everything
+### 4. Deploy Smart Contracts
 ```bash
-# Deploy the entire platform
-chmod +x scripts/deploy-all.sh
-./scripts/deploy-all.sh
+# Deploy all contracts to Celo Sepolia
+cd Blockchain
+npm run mango:deploy-all
 ```
 
-### 5. Access the Platform
+### 5. Start Development Servers
+```bash
+# Start Backend (Terminal 1)
+cd Backend && npm run dev
+
+# Start Frontend (Terminal 2)  
+cd Frontend && npm run dev
+```
+
+### 6. Access the Platform
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:5000
 - **WebSocket**: ws://localhost:5000
+- **CeloScan**: https://sepolia.celoscan.io
 
 ## 🔧 Manual Setup
 
@@ -130,7 +157,7 @@ npm run dev
 cd Blockchain
 npm install
 npm run compile
-npm run deploy:alfajores
+npm run mango:deploy-all  # Deploy all contracts to Celo Sepolia
 ```
 
 ## 📚 API Documentation
@@ -163,30 +190,48 @@ npm run deploy:alfajores
 - **BetContract**: Main betting logic and fund management
 - **BetEscrow**: Secure escrow for bet funds
 - **IntentRouter**: Cross-chain payout intent management
-- **MockToken**: Test token for development
+- **GameLogic**: Game mechanics and VRF integration
+- **VRFConsumer**: Verifiable Random Function consumer
+- **MockToken**: Test ERC20 token for development
+- **MangoTree**: Treasury and fund management contract
 
 ### Deployment Addresses
 ```javascript
-// Celo Alfajores (Testnet)
-BetContract: "0x..."
-BetEscrow: "0x..."
-IntentRouter: "0x..."
-MockToken: "0x..."
+// Celo Sepolia (Testnet) - LIVE ✅
+BetContract: "0x9c4Ab9bdb97342A31cf0e2632610957cF633978C"
+BetEscrow: "0x070021DC542C5b5b7e9aeBDB72aa6Cabda88905D"
+IntentRouter: "0x0CFe46e97865ece06b0CfaD2CB8069833399986a"
+MockToken: "0xD51Aa28401Ccf5ed584D5c1520857FD6Cd067A0a"
+GameLogic: "0x6fbBe3dCb9E2110aA5aaf0198d34880f6639bEA4"
+VRFConsumer: "0x10Ae60ADe4F5223C89EF958E1Df017737D0f0c8E"
+MangoTree: "0x1bdE57E8Bfa994E4998F82Fa267b9f62fE6Ee9e4"
 
-// Polygon Mumbai (Testnet)
-// Same contracts deployed on Polygon
+// Network: Celo Sepolia (Chain ID: 11142220)
+// Deployer: 0xC0Aa6fb8641c2b014d86112dB098AAb17bcc9b13
+// Total Gas Used: 8,262,422
+// Total Cost: 0.8262422 CELO
 ```
+
+### 🔗 **Direct Contract Links**
+- [BetContract](https://sepolia.celoscan.io/address/0x9c4Ab9bdb97342A31cf0e2632610957cF633978C) - Main betting logic
+- [BetEscrow](https://sepolia.celoscan.io/address/0x070021DC542C5b5b7e9aeBDB72aa6Cabda88905D) - Fund escrow
+- [IntentRouter](https://sepolia.celoscan.io/address/0x0CFe46e97865ece06b0CfaD2CB8069833399986a) - Cross-chain router
+- [MockToken](https://sepolia.celoscan.io/address/0xD51Aa28401Ccf5ed584D5c1520857FD6Cd067A0a) - Test token
+- [GameLogic](https://sepolia.celoscan.io/address/0x6fbBe3dCb9E2110aA5aaf0198d34880f6639bEA4) - Game mechanics
+- [VRFConsumer](https://sepolia.celoscan.io/address/0x10Ae60ADe4F5223C89EF958E1Df017737D0f0c8E) - Randomness
+- [MangoTree](https://sepolia.celoscan.io/address/0x1bdE57E8Bfa994E4998F82Fa267b9f62fE6Ee9e4) - Treasury
 
 ## 🌐 Supported Networks
 
 | Network | Chain ID | Status | RPC URL |
 |---------|----------|--------|---------|
-| Celo | 42220 | ✅ Mainnet | https://forno.celo.org |
-| Celo Alfajores | 44787 | ✅ Testnet | https://alfajores-forno.celo-testnet.org |
-| Polygon | 137 | ✅ Mainnet | https://polygon-rpc.com |
-| Polygon Mumbai | 80001 | ✅ Testnet | https://rpc-mumbai.maticvigil.com |
-| Ethereum | 1 | ✅ Mainnet | https://mainnet.infura.io/v3/YOUR_KEY |
-| Base | 8453 | ✅ Mainnet | https://mainnet.base.org |
+| Celo | 42220 | 🔄 Planned | https://forno.celo.org |
+| **Celo Sepolia** | **11142220** | **✅ LIVE** | **https://forno.celo-sepolia.celo-testnet.org** |
+| Celo Alfajores | 44787 | 🔄 Planned | https://alfajores-forno.celo-testnet.org |
+| Polygon | 137 | 🔄 Planned | https://polygon-rpc.com |
+| Polygon Mumbai | 80001 | 🔄 Planned | https://rpc-mumbai.maticvigil.com |
+| Ethereum | 1 | 🔄 Planned | https://mainnet.infura.io/v3/YOUR_KEY |
+| Base | 8453 | 🔄 Planned | https://mainnet.base.org |
 
 ## 🔒 Security Features
 
@@ -252,30 +297,34 @@ npm test
 
 ### Production Deployment
 ```bash
-# Deploy to production
-./scripts/deploy-production.sh
+# Deploy smart contracts to Celo Sepolia
+cd Blockchain && npm run mango:deploy-all
 
-# Or deploy components individually
+# Deploy backend
 cd Backend && npm run build && npm start
+
+# Deploy frontend  
 cd Frontend && npm run build && npm start
-cd Blockchain && npm run deploy:celo
 ```
 
 ### Environment Variables
 ```bash
 # Backend
 MONGODB_URI=mongodb://localhost:27017/mango-tree
-RPC_URL=https://forno.celo.org
+RPC_URL=https://forno.celo-sepolia.celo-testnet.org
 PRIVATE_KEY=your_private_key
-INTENT_ROUTER_ADDRESS=0x...
+INTENT_ROUTER_ADDRESS=0x0CFe46e97865ece06b0CfaD2CB8069833399986a
+BET_CONTRACT_ADDRESS=0x9c4Ab9bdb97342A31cf0e2632610957cF633978C
 
 # Frontend
-NEXT_PUBLIC_API_URL=https://api.mango-tree.com
-NEXT_PUBLIC_WS_URL=wss://api.mango-tree.com
-NEXT_PUBLIC_CHAIN_ID=42220
+NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_WS_URL=ws://localhost:5000
+NEXT_PUBLIC_CHAIN_ID=11142220
+NEXT_PUBLIC_BET_CONTRACT=0x9c4Ab9bdb97342A31cf0e2632610957cF633978C
 
 # Blockchain
 PRIVATE_KEY=your_private_key
+CELO_RPC_URL=https://forno.celo-sepolia.celo-testnet.org
 CELOSCAN_API_KEY=your_celoscan_key
 ```
 
