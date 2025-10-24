@@ -3,170 +3,110 @@ const fs = require("fs");
 const path = require("path");
 
 async function main() {
-  console.log("🚀 Deploying Mango Tree contracts...");
+  console.log("🌳 Starting Mango Tree deployment on Celo Sepolia...");
+  console.log("==================================================");
 
-  // Get the contract factories
-  const MockToken = await ethers.getContractFactory("MockToken");
-  const BetEscrow = await ethers.getContractFactory("BetEscrow");
-  const BetContract = await ethers.getContractFactory("BetContract");
-  const IntentRouter = await ethers.getContractFactory("IntentRouter");
-  const VRFConsumer = await ethers.getContractFactory("VRFConsumer");
-  const GameLogic = await ethers.getContractFactory("GameLogic");
-  const TestContract = await ethers.getContractFactory("TestContract");
-
-  const [deployer] = await ethers.getSigners();
-  console.log("Deploying contracts with account:", deployer.address);
-  console.log("Account balance:", (await deployer.getBalance()).toString());
-
-  // Deploy MockToken (cUSD for testing)
-  console.log("\n📄 Deploying MockToken (cUSD)...");
-  const mockToken = await MockToken.deploy(
-    "Celo USD",
-    "cUSD",
-    18,
-    ethers.utils.parseEther("1000000") // 1M tokens
-  );
-  await mockToken.deployed();
-  console.log("✅ MockToken deployed to:", mockToken.address);
-
-  // Deploy BetEscrow
-  console.log("\n🏦 Deploying BetEscrow...");
-  const betEscrow = await BetEscrow.deploy();
-  await betEscrow.deployed();
-  console.log("✅ BetEscrow deployed to:", betEscrow.address);
-
-  // Deploy VRFConsumer
-  console.log("\n🎲 Deploying VRFConsumer...");
-  const vrfConsumer = await VRFConsumer.deploy();
-  await vrfConsumer.deployed();
-  console.log("✅ VRFConsumer deployed to:", vrfConsumer.address);
-
-  // Deploy GameLogic
-  console.log("\n🎮 Deploying GameLogic...");
-  const gameLogic = await GameLogic.deploy(vrfConsumer.address);
-  await gameLogic.deployed();
-  console.log("✅ GameLogic deployed to:", gameLogic.address);
-
-  // Deploy BetContract
-  console.log("\n🎲 Deploying BetContract...");
-  const betContract = await BetContract.deploy(betEscrow.address);
-  await betContract.deployed();
-  console.log("✅ BetContract deployed to:", betContract.address);
-
-  // Deploy IntentRouter
-  console.log("\n🌉 Deploying IntentRouter...");
-  const intentRouter = await IntentRouter.deploy();
-  await intentRouter.deployed();
-  console.log("✅ IntentRouter deployed to:", intentRouter.address);
-
-  // Deploy TestContract (optional, for testing)
-  console.log("\n🧪 Deploying TestContract...");
-  const testContract = await TestContract.deploy();
-  await testContract.deployed();
-  console.log("✅ TestContract deployed to:", testContract.address);
-
-  // Configure contracts
-  console.log("\n⚙️ Configuring contracts...");
+  // Get the deployer account
+  const signers = await ethers.getSigners();
+  if (signers.length === 0) {
+    console.error("❌ No signers available. Please check your private key configuration.");
+    process.exit(1);
+  }
+  const deployer = signers[0];
+  console.log("📝 Deploying contracts with account:", deployer.address);
   
-  // Add cUSD as supported token in BetContract
-  await betContract.addSupportedToken(mockToken.address);
-  console.log("✅ Added cUSD as supported token in BetContract");
+  // Check account balance
+  const balance = await ethers.provider.getBalance(deployer.address);
+  console.log("💰 Account balance:", ethers.formatEther(balance), "CELO");
+  
+  if (balance < ethers.parseEther("0.1")) {
+    console.log("⚠️  Warning: Low balance! You may need more CELO for deployment.");
+    console.log("💡 Get testnet CELO from: https://faucet.celo.org/sepolia");
+  }
 
-  // Add cUSD as supported token in IntentRouter
-  await intentRouter.addSupportedToken(mockToken.address);
-  console.log("✅ Added cUSD as supported token in IntentRouter");
-
-  // Add cUSD as supported token in BetEscrow
-  await betEscrow.addSupportedToken(mockToken.address);
-  console.log("✅ Added cUSD as supported token in BetEscrow");
-
-  // Set up authorized contracts
-  await betEscrow.addAuthorizedContract(betContract.address);
-  console.log("✅ Added BetContract as authorized in BetEscrow");
-
-  // Set up authorized resolvers (for testing, we'll use the deployer)
-  await betContract.addAuthorizedResolver(deployer.address);
-  console.log("✅ Added deployer as authorized resolver");
-
-  // Add deployer as authorized solver for IntentRouter
-  await intentRouter.addAuthorizedSolver(deployer.address);
-  console.log("✅ Added deployer as authorized solver");
-
-  // Save deployment info
+  // Get network info
   const network = await ethers.provider.getNetwork();
+  console.log("🌐 Network:", network.name, "(Chain ID:", network.chainId + ")");
+
+  // Set treasury address (you can change this to your desired treasury address)
+  const treasuryAddress = deployer.address; // Using deployer as treasury for now
+  console.log("🏦 Treasury address:", treasuryAddress);
+
+  console.log("\n🚀 Deploying MangoTree contract...");
+  console.log("⏳ Deployment in progress...");
+
+  // Deploy MangoTree contract
+  const MangoTree = await ethers.getContractFactory("MangoTree");
+  const mangoTree = await MangoTree.deploy(treasuryAddress);
+  
+  console.log("⏳ Waiting for deployment confirmation...");
+  await mangoTree.waitForDeployment();
+
+  // Get deployment transaction details
+  const deployTx = mangoTree.deploymentTransaction();
+  const receipt = await deployTx.wait();
+  
+  console.log("✅ MangoTree deployed successfully!");
+  console.log("📍 Contract address:", await mangoTree.getAddress());
+  console.log("⛽ Gas used:", receipt.gasUsed.toString());
+  console.log("💸 Gas price:", ethers.formatUnits(deployTx.gasPrice, "gwei"), "gwei");
+  console.log("💰 Total cost:", ethers.formatEther(receipt.gasUsed * deployTx.gasPrice), "CELO");
+
+  // Create deployment info object
   const deploymentInfo = {
     network: network.name,
     chainId: network.chainId,
     timestamp: new Date().toISOString(),
     deployer: deployer.address,
+    treasury: treasuryAddress,
     contracts: {
-      MockToken: {
-        address: mockToken.address,
-        name: "Celo USD",
-        symbol: "cUSD",
-        decimals: 18
-      },
-      BetEscrow: {
-        address: betEscrow.address
-      },
-      BetContract: {
-        address: betContract.address
-      },
-      IntentRouter: {
-        address: intentRouter.address
-      },
-      VRFConsumer: {
-        address: vrfConsumer.address
-      },
-      GameLogic: {
-        address: gameLogic.address
-      },
-      TestContract: {
-        address: testContract.address
-      }
+      MangoTree: await mangoTree.getAddress()
     },
-    configuration: {
-      platformFee: "2.5%",
-      processingFee: "0.001 ETH",
-      supportedTokens: [mockToken.address],
-      authorizedResolvers: [deployer.address],
-      authorizedSolvers: [deployer.address]
+    deployment: {
+      gasUsed: receipt.gasUsed.toString(),
+      gasPrice: deployTx.gasPrice.toString(),
+      totalCost: ethers.formatEther(receipt.gasUsed * deployTx.gasPrice)
+    },
+    celoscan: {
+      contractUrl: `https://sepolia.celoscan.io/address/${await mangoTree.getAddress()}`,
+      txUrl: `https://sepolia.celoscan.io/tx/${deployTx.hash}`
     }
   };
 
-  // Save to file
-  const deploymentPath = path.join(__dirname, "..", "deployments", `${network.name}-${network.chainId}.json`);
-  const deploymentDir = path.dirname(deploymentPath);
+  // Save deployment info to deployedAddresses.json
+  const deploymentPath = path.join(__dirname, "..", "deployedAddresses.json");
+  fs.writeFileSync(deploymentPath, JSON.stringify(deploymentInfo, (key, value) =>
+    typeof value === 'bigint' ? value.toString() : value, 2));
   
-  if (!fs.existsSync(deploymentDir)) {
-    fs.mkdirSync(deploymentDir, { recursive: true });
-  }
-  
-  fs.writeFileSync(deploymentPath, JSON.stringify(deploymentInfo, null, 2));
-  console.log(`\n📁 Deployment info saved to: ${deploymentPath}`);
+  console.log("\n📁 Deployment info saved to:", deploymentPath);
+  console.log("🔗 CeloScan contract link:", deploymentInfo.celoscan.contractUrl);
+  console.log("🔗 CeloScan transaction link:", deploymentInfo.celoscan.txUrl);
 
-  // Display summary
+  // Verify contract is working
+  console.log("\n🧪 Testing deployed contract...");
+  const treasuryFromContract = await mangoTree.treasury();
+  const totalBets = await mangoTree.totalBets();
+  
+  console.log("✅ Treasury address verified:", treasuryFromContract);
+  console.log("✅ Initial total bets:", totalBets.toString());
+
+  // Display final summary
   console.log("\n🎉 Deployment Summary:");
-  console.log("========================");
-  console.log(`Network: ${network.name} (Chain ID: ${network.chainId})`);
+  console.log("======================");
+  console.log(`Contract: MangoTree`);
+  console.log(`Address: ${await mangoTree.getAddress()}`);
+  console.log(`Network: ${network.name} (${network.chainId})`);
   console.log(`Deployer: ${deployer.address}`);
-  console.log(`MockToken (cUSD): ${mockToken.address}`);
-  console.log(`BetEscrow: ${betEscrow.address}`);
-  console.log(`BetContract: ${betContract.address}`);
-  console.log(`IntentRouter: ${intentRouter.address}`);
-  console.log(`VRFConsumer: ${vrfConsumer.address}`);
-  console.log(`GameLogic: ${gameLogic.address}`);
-  console.log(`TestContract: ${testContract.address}`);
-  console.log("\n✨ All contracts deployed successfully!");
-
-  // Verify contracts (if on a supported network)
-  if (network.chainId !== 1337) { // Not local hardhat
-    console.log("\n🔍 To verify contracts, run:");
-    console.log(`npx hardhat verify --network ${network.name} ${mockToken.address} "Celo USD" "cUSD" 18 ${ethers.utils.parseEther("1000000")}`);
-    console.log(`npx hardhat verify --network ${network.name} ${betEscrow.address}`);
-    console.log(`npx hardhat verify --network ${network.name} ${betContract.address}`);
-    console.log(`npx hardhat verify --network ${network.name} ${intentRouter.address}`);
-  }
+  console.log(`Treasury: ${treasuryAddress}`);
+  console.log(`Gas Used: ${receipt.gasUsed.toString()}`);
+  console.log(`Total Cost: ${ethers.formatEther(receipt.gasUsed * deployTx.gasPrice)} CELO`);
+  
+  console.log("\n🔍 Next steps:");
+  console.log("1. Verify contract: npx hardhat run scripts/verify.js --network celoSepolia");
+  console.log("2. Test contract functions on CeloScan");
+  console.log("3. Update frontend/backend with contract address");
+  
+  console.log("\n✨ Mango Tree deployment completed successfully! 🌳");
 }
 
 main()

@@ -1,0 +1,84 @@
+{
+  "network": "celoSepolia",
+  "chainId": "11142220",
+  "timestamp": "2025-10-24T19:09:28.518Z",
+  "deployer": "0xC0Aa6fb8641c2b014d86112dB098AAb17bcc9b13",
+  "contracts": {
+    "MockToken": {
+      "address": "0xD51Aa28401Ccf5ed584D5c1520857FD6Cd067A0a",
+      "gasUsed": "873674",
+      "gasPrice": "100000000000",
+      "txHash": "0x0c38359be2cf91043838070d7c7edf7713e66721a0d3805a2e0261ae05993973"
+    },
+    "VRFConsumer": {
+      "address": "0x10Ae60ADe4F5223C89EF958E1Df017737D0f0c8E",
+      "gasUsed": "495013",
+      "gasPrice": "100000000000",
+      "txHash": "0xe872bc15f8e5f857a04548d997903ec821042ae49df98243feba7f0c6a4b61e1"
+    },
+    "BetEscrow": {
+      "address": "0x070021DC542C5b5b7e9aeBDB72aa6Cabda88905D",
+      "gasUsed": "1738116",
+      "gasPrice": "100000000000",
+      "txHash": "0x115047c9b60c28aef0a880914b73ee3462ae38f8d212ed82754e8dd642add2d7"
+    },
+    "GameLogic": {
+      "address": "0x6fbBe3dCb9E2110aA5aaf0198d34880f6639bEA4",
+      "gasUsed": "653783",
+      "gasPrice": "100000000000",
+      "txHash": "0x6ecd32fae2ebf039354c0287522e0e6f796a91b2a1cae18f49da1530653e0ccd"
+    },
+    "BetContract": {
+      "address": "0x9c4Ab9bdb97342A31cf0e2632610957cF633978C",
+      "gasUsed": "2381161",
+      "gasPrice": "100000000000",
+      "txHash": "0xd58e507b449c5ca838b4bd5ceb22958ae28d349c95c9eb5530f26b3a2632d681"
+    },
+    "IntentRouter": {
+      "address": "0x0CFe46e97865ece06b0CfaD2CB8069833399986a",
+      "gasUsed": "1730499",
+      "gasPrice": "100000000000",
+      "txHash": "0x987ab332713c5329fbfcc65653b99696dc73486c426926a65c9748ae19a8c0ce"
+    },
+    "MangoTree": {
+      "address": "0x1bdE57E8Bfa994E4998F82Fa267b9f62fE6Ee9e4",
+      "gasUsed": "390176",
+      "gasPrice": "100000000000",
+      "txHash": "0x3d6c3cb9b9a94a8c9fefde665584170e8698378dd59a8398aad4f57491c5cc0f"
+    }
+  },
+  "deployment": {
+    "totalGasUsed": 8262422,
+    "totalCost": "0.8262422"
+  },
+  "celoscan": {
+    "MockToken": {
+      "contractUrl": "https://sepolia.celoscan.io/address/0xD51Aa28401Ccf5ed584D5c1520857FD6Cd067A0a",
+      "txUrl": "https://sepolia.celoscan.io/tx/0x0c38359be2cf91043838070d7c7edf7713e66721a0d3805a2e0261ae05993973"
+    },
+    "VRFConsumer": {
+      "contractUrl": "https://sepolia.celoscan.io/address/0x10Ae60ADe4F5223C89EF958E1Df017737D0f0c8E",
+      "txUrl": "https://sepolia.celoscan.io/tx/0xe872bc15f8e5f857a04548d997903ec821042ae49df98243feba7f0c6a4b61e1"
+    },
+    "BetEscrow": {
+      "contractUrl": "https://sepolia.celoscan.io/address/0x070021DC542C5b5b7e9aeBDB72aa6Cabda88905D",
+      "txUrl": "https://sepolia.celoscan.io/tx/0x115047c9b60c28aef0a880914b73ee3462ae38f8d212ed82754e8dd642add2d7"
+    },
+    "GameLogic": {
+      "contractUrl": "https://sepolia.celoscan.io/address/0x6fbBe3dCb9E2110aA5aaf0198d34880f6639bEA4",
+      "txUrl": "https://sepolia.celoscan.io/tx/0x6ecd32fae2ebf039354c0287522e0e6f796a91b2a1cae18f49da1530653e0ccd"
+    },
+    "BetContract": {
+      "contractUrl": "https://sepolia.celoscan.io/address/0x9c4Ab9bdb97342A31cf0e2632610957cF633978C",
+      "txUrl": "https://sepolia.celoscan.io/tx/0xd58e507b449c5ca838b4bd5ceb22958ae28d349c95c9eb5530f26b3a2632d681"
+    },
+    "IntentRouter": {
+      "contractUrl": "https://sepolia.celoscan.io/address/0x0CFe46e97865ece06b0CfaD2CB8069833399986a",
+      "txUrl": "https://sepolia.celoscan.io/tx/0x987ab332713c5329fbfcc65653b99696dc73486c426926a65c9748ae19a8c0ce"
+    },
+    "MangoTree": {
+      "contractUrl": "https://sepolia.celoscan.io/address/0x1bdE57E8Bfa994E4998F82Fa267b9f62fE6Ee9e4",
+      "txUrl": "https://sepolia.celoscan.io/tx/0x3d6c3cb9b9a94a8c9fefde665584170e8698378dd59a8398aad4f57491c5cc0f"
+    }
+  }
+}

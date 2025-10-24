@@ -232,7 +232,7 @@ export default function CrossChainBridge() {
       </motion.div>
 
       {/* Bridge Overview */}
-      <motion.div
+        <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="grid grid-cols-1 md:grid-cols-3 gap-4"
@@ -245,7 +245,7 @@ export default function CrossChainBridge() {
           <p className="text-sm text-muted-foreground">
             Powered by Axelar for secure cross-chain transfers
           </p>
-        </div>
+              </div>
 
         <div className="p-6 rounded-xl border border-accent/20 bg-gradient-to-r from-primary/10 to-accent/10 backdrop-blur-sm">
           <div className="flex items-center gap-3 mb-3">
@@ -255,7 +255,7 @@ export default function CrossChainBridge() {
           <p className="text-sm text-muted-foreground">
             Complete cross-chain transfers in minutes
           </p>
-        </div>
+            </div>
 
         <div className="p-6 rounded-xl border border-accent/20 bg-gradient-to-r from-green-500/10 to-emerald-500/10 backdrop-blur-sm">
           <div className="flex items-center gap-3 mb-3">
@@ -266,12 +266,12 @@ export default function CrossChainBridge() {
             Support for Celo, Polygon, Ethereum, and Base
           </p>
         </div>
-      </motion.div>
+                    </motion.div>
 
       {/* Create Payout Intent */}
-      <motion.div
+                      <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+                        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
         className="p-6 rounded-xl border border-accent/20 bg-card/50 backdrop-blur-sm"
       >
@@ -306,20 +306,20 @@ export default function CrossChainBridge() {
                     </option>
                   ))}
                 </select>
-              </div>
+                </div>
 
-              <div>
+                <div>
                 <label className="block text-sm font-medium mb-2">Token</label>
                 <select
-                  value={selectedToken}
-                  onChange={(e) => setSelectedToken(e.target.value)}
+                    value={selectedToken}
+                    onChange={(e) => setSelectedToken(e.target.value)}
                   className="w-full p-3 rounded-lg border border-accent/20 bg-background/50 backdrop-blur-sm"
                 >
                   {SUPPORTED_TOKENS.filter(token => token.chain === selectedChain).map((token) => (
                     <option key={`${token.symbol}-${token.chain}`} value={token.symbol}>
                       {token.symbol} - {token.name}
-                    </option>
-                  ))}
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>
@@ -333,7 +333,7 @@ export default function CrossChainBridge() {
                 placeholder="Enter amount to transfer"
                 className="w-full p-3 rounded-lg border border-accent/20 bg-background/50 backdrop-blur-sm"
               />
-            </div>
+          </div>
 
             <button
               onClick={handleCreatePayoutIntent}
@@ -367,13 +367,13 @@ export default function CrossChainBridge() {
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="h-20 bg-muted/10 rounded animate-pulse" />
             ))}
-          </div>
+                      </div>
         ) : payoutIntents.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">
             <Globe className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>No payout intents found</p>
             <p className="text-sm">Create a payout intent to transfer your winnings</p>
-          </div>
+                      </div>
         ) : (
           <div className="space-y-3">
             {payoutIntents.map((intent) => (
@@ -413,13 +413,13 @@ export default function CrossChainBridge() {
                         className="px-4 py-2 rounded-lg bg-accent text-background font-medium hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                       >
                         {processing === intent._id && (
-                          <motion.div
+                    <motion.div
                             animate={{ rotate: 360 }}
                             transition={{ duration: 1, repeat: Infinity }}
                             className="w-4 h-4 border-2 border-background border-t-transparent rounded-full"
                           />
                         )}
-                        Confirm
+                      Confirm
                       </button>
                     )}
 
@@ -435,11 +435,11 @@ export default function CrossChainBridge() {
                     )}
                   </div>
                 </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
           </div>
         )}
-      </motion.div>
+        </motion.div>
     </div>
   )
 }
