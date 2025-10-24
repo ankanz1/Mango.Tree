@@ -1,0 +1,56 @@
+{
+  "name": "mango-tree-blockchain",
+  "version": "1.0.0",
+  "description": "Blockchain contracts and services for Mango Tree betting platform",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:coverage": "hardhat coverage",
+    "deploy": "hardhat run scripts/deploy.js --network",
+    "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
+    "deploy:alfajores": "hardhat run scripts/deploy.js --network celoAlfajores",
+    "deploy:celo": "hardhat run scripts/deploy.js --network celo",
+    "deploy:mumbai": "hardhat run scripts/deploy.js --network polygonMumbai",
+    "deploy:polygon": "hardhat run scripts/deploy.js --network polygon",
+    "verify": "hardhat run scripts/verify.js --network",
+    "verify:alfajores": "hardhat run scripts/verify.js --network celoAlfajores",
+    "verify:celo": "hardhat run scripts/verify.js --network celo",
+    "verify:mumbai": "hardhat run scripts/verify.js --network polygonMumbai",
+    "verify:polygon": "hardhat run scripts/verify.js --network polygon",
+    "node": "hardhat node",
+    "clean": "hardhat clean",
+    "size": "hardhat size-contracts",
+    "gas": "REPORT_GAS=true hardhat test",
+    "start:solver": "node services/SolverService.js",
+    "start:listener": "node services/EventListener.js",
+    "start:all": "node scripts/start-all.js"
+  },
+  "keywords": [
+    "blockchain",
+    "betting",
+    "cross-chain",
+    "celo",
+    "polygon",
+    "axelar"
+  ],
+  "author": "Mango Tree Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@openzeppelin/contracts": "^4.9.3",
+    "hardhat": "^2.17.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.5",
+    "hardhat-contract-sizer": "^2.10.0",
+    "dotenv": "^16.3.1"
+  },
+  "dependencies": {
+    "@axelar-network/axelarjs-sdk": "^2.0.0",
+    "ethers": "^5.7.2",
+    "web3": "^4.1.1",
+    "axios": "^1.7.7",
+    "ws": "^8.16.0"
+  }
+}
+
