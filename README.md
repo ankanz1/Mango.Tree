@@ -2,6 +2,9 @@
 
 A fully functional, cross-chain, decentralized betting platform built on Celo with cross-chain payout intents powered by Axelar.
 
+<img width="1325" height="655" alt="image" src="https://github.com/user-attachments/assets/51a1e395-6bbe-4911-8cce-42ecc46059e8" />
+
+
 ## 🚀 Features
 
 ### ✨ Core Features
